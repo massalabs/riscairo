@@ -1028,8 +1028,8 @@ impl RISCVMachineImpl of RISCVMachineTrait {
     }
 
     // set a CSR value
-    // for now, no particular CSR is implemented and no access checks are done
-    fn set_csr(ref self: RISCVMachine, csr: u32, value: u32) -> bool {
+    // for now, no particular CSR is implemented and no advanced access checks are done
+    fn set_csr_checked(ref self: RISCVMachine, csr: u32, value: u32) -> bool {
         if csr > 0xFFF {
             // invalid CSR
             return false;
@@ -1040,6 +1040,16 @@ impl RISCVMachineImpl of RISCVMachineTrait {
                 // as such, its value should not change
                 return false;
             }
+        }
+        self.csrs.insert(csr.into(), value);
+        true
+    }
+
+    // force-set a CSR value
+    fn set_csr(ref self: RISCVMachine, csr: u32, value: u32) -> bool {
+        if csr > 0xFFF {
+            // invalid CSR
+            return false;
         }
         self.csrs.insert(csr.into(), value);
         true
@@ -1520,7 +1530,7 @@ impl RISCVMachineImpl of RISCVMachineTrait {
                         if !self.set_r(rd, old_csr_value) {
                             return FlowControl::InvalidInstruction;
                         }
-                        if !self.set_csr(csr, rs1_v) {
+                        if !self.set_csr_checked(csr, rs1_v) {
                             return FlowControl::InvalidInstruction;
                         }
                     },
@@ -1538,7 +1548,7 @@ impl RISCVMachineImpl of RISCVMachineTrait {
                         if !self.set_r(rd, old_csr_value) {
                             return FlowControl::InvalidInstruction;
                         }
-                        if !self.set_csr(csr, old_csr_value | rs1_v) {
+                        if !self.set_csr_checked(csr, old_csr_value | rs1_v) {
                             return FlowControl::InvalidInstruction;
                         }
                     },
@@ -1556,7 +1566,7 @@ impl RISCVMachineImpl of RISCVMachineTrait {
                         if !self.set_r(rd, old_csr_value) {
                             return FlowControl::InvalidInstruction;
                         }
-                        if !self.set_csr(csr, old_csr_value & ~rs1_v) {
+                        if !self.set_csr_checked(csr, old_csr_value & ~rs1_v) {
                             return FlowControl::InvalidInstruction;
                         }
                     },
@@ -1571,7 +1581,7 @@ impl RISCVMachineImpl of RISCVMachineTrait {
                         if !self.set_r(rd, old_csr_value) {
                             return FlowControl::InvalidInstruction;
                         }
-                        if !self.set_csr(csr, rs1) {
+                        if !self.set_csr_checked(csr, rs1) {
                             return FlowControl::InvalidInstruction;
                         }
                     },
@@ -1585,7 +1595,7 @@ impl RISCVMachineImpl of RISCVMachineTrait {
                         if !self.set_r(rd, old_csr_value) {
                             return FlowControl::InvalidInstruction;
                         }
-                        if !self.set_csr(csr, old_csr_value | rs1) {
+                        if !self.set_csr_checked(csr, old_csr_value | rs1) {
                             return FlowControl::InvalidInstruction;
                         }
                     },
@@ -1599,7 +1609,7 @@ impl RISCVMachineImpl of RISCVMachineTrait {
                         if !self.set_r(rd, old_csr_value) {
                             return FlowControl::InvalidInstruction;
                         }
-                        if !self.set_csr(csr, old_csr_value & ~rs1) {
+                        if !self.set_csr_checked(csr, old_csr_value & ~rs1) {
                             return FlowControl::InvalidInstruction;
                         }
                     },
