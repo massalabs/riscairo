@@ -8,6 +8,8 @@ This is my first program in cairo !
 It implements an ELF file parser and a RISC-V virtual machine.
 The machine implements the RV32i instruction set, without extensions for now.
 
+WARNING: do not use in production, this is a POC project for now.
+
 ## Run a basic test
 
 Running the command `scarb test` should trigger a basic test that loads the following RISC-V program compiled as ELF:
