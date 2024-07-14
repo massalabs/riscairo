@@ -6,10 +6,11 @@ RISC-V ELF interpreter in cairo 2.
 
 This is my first program in cairo !
 It implements an ELF file parser and a RISC-V virtual machine.
+The machine implements the RV32i instruction set, without extensions for now.
 
 ## Run a basic test
 
-Bu running the command `scarb test` it should trigger a basic test that loads the following RISC-V program compiled as ELF:
+Running the command `scarb test` should trigger a basic test that loads the following RISC-V program compiled as ELF:
 
 ```
 .global _start
