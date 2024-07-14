@@ -50,7 +50,7 @@ the expected output of the run is:
 
 ```
 $ scarb cairo-run
-   Compiling riscairo v0.1.0 (/home/damip/riscairo/Scarb.toml)
+   Compiling riscairo v0.1.0
     Finished release target(s) in 10 seconds
      Running riscairo
 The RISC-V ELF was executed and sent the following output: hello world!
