@@ -12,7 +12,7 @@ WARNING: do not use in production, this is a POC project for now.
 
 ## Run a basic test
 
-Running the command `scarb test` should trigger a basic test that loads the following RISC-V program compiled as ELF:
+Running the command `scarb cairo-run` should trigger a basic run that loads the following RISC-V program compiled as ELF:
 
 ```
 .global _start
@@ -49,14 +49,11 @@ hello:
 the expected output of the run is:
 
 ```
-$ scarb test
-     Running cairo-test riscairo
-   Compiling test(riscairo_unittest) riscairo v0.1.0 (/home/damip/riscairo/Scarb.toml)
+$ scarb cairo-run
+   Compiling riscairo v0.1.0 (/home/damip/riscairo/Scarb.toml)
     Finished release target(s) in 10 seconds
-testing riscairo ...
-running 1 test
+     Running riscairo
 The RISC-V ELF was executed and sent the following output: hello world!
 
-test riscairo::tests::memory_communication ... ok (gas usage est.: 18563824)
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out;
+Run completed successfully, returning [0]
 ```
