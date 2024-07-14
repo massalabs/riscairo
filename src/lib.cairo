@@ -68,7 +68,7 @@ fn main() -> u32 {
             FlowControl::SRet => { println!("SRet"); },
             FlowControl::MRet => { println!("MRet"); },
             FlowControl::Wfi => {
-                // interrupt on wfi because that's how this perticular program signals that it finished
+                // interrupt on wfi because that's how this particular program signals that it has finished
                 break;
             },
         };
