@@ -944,7 +944,7 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
                             // wfi
                             return_v = FlowControl::Wfi;
                         } else if (instr
-                            & 0b00010_01_00000_00000_000_00000_11100_11) == 0b00010_01_00000_00000_000_00000_11100_11 { // sfence.vma
+                            & 0b11111_11_00000_00000_111_00000_11111_11) == 0b00010_01_00000_00000_000_00000_11100_11 { // sfence.vma
                         // ignore for now
                         } else {
                             return FlowControl::InvalidInstruction;

@@ -155,13 +155,21 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
 
             // sh_flags
-            let _sh_flags = match self.get_w(data, offset + 0x08) {
+            let sh_flags = match self.get_w(data, offset + 0x08) {
                 Option::Some(v) => v,
                 Option::None => {
                     res = false;
                     break;
                 },
             };
+            if sh_flags & 0x02 == 0 {
+                // Does not have the SHF_ALLOC flag set: do not load
+                
+                // update cursor and continue
+                section_index += 1;
+                offset += self.e_shentsize.into();
+                continue;
+            }
 
             // sh_addr
             let sh_addr = match self.get_w(data, offset + 0x0C) {
