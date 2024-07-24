@@ -1,11 +1,12 @@
-
 mod riscv;
 mod elf;
 
 use riscv::{RISCVMachineTrait, FlowControl};
 use elf::ELFLoaderTrait;
 
-pub fn run_riscvelf(elf_data: @Array<u8>, funct_name: ByteArray, params: ByteArray) -> Result<ByteArray, ByteArray> {
+pub fn run_riscvelf(
+    elf_data: @Array<u8>, funct_name: ByteArray, params: ByteArray
+) -> Result<ByteArray, ByteArray> {
     let mut elf_loader = ELFLoaderTrait::new();
     let mut machine = RISCVMachineTrait::new();
 

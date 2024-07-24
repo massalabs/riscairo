@@ -164,7 +164,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
             if sh_flags & 0x02 == 0 {
                 // Does not have the SHF_ALLOC flag set: do not load
-                
+
                 // update cursor and continue
                 section_index += 1;
                 offset += self.e_shentsize.into();
