@@ -12,46 +12,16 @@ pub enum FlowControl {
 }
 
 pub struct RISCVMachine {
-    // r0 is hardcoded to 0
-    r1: u32,
-    r2: u32,
-    r3: u32,
-    r4: u32,
-    r5: u32,
-    r6: u32,
-    r7: u32,
-    r8: u32,
-    r9: u32,
-    r10: u32,
-    r11: u32,
-    r12: u32,
-    r13: u32,
-    r14: u32,
-    r15: u32,
-    r16: u32,
-    r17: u32,
-    r18: u32,
-    r19: u32,
-    r20: u32,
-    r21: u32,
-    r22: u32,
-    r23: u32,
-    r24: u32,
-    r25: u32,
-    r26: u32,
-    r27: u32,
-    r28: u32,
-    r29: u32,
-    r30: u32,
-    r31: u32,
     pc: u32,
     prog_end: u32, // when pc reaches this value, the program ends
+    registers: Felt252Dict<u32>,
     mem: Felt252Dict<u8>,
     csrs: Felt252Dict<u32>,
 }
 
 impl RISCVMachineDestruct of Destruct<RISCVMachine> {
     fn destruct(self: RISCVMachine) nopanic {
+        self.registers.squash();
         self.mem.squash();
         self.csrs.squash();
     }
@@ -311,39 +281,9 @@ pub fn from_le(v: u32) -> u32 {
 pub impl RISCVMachineImpl of RISCVMachineTrait {
     fn new() -> RISCVMachine {
         RISCVMachine {
-            r1: 0,
-            r2: 0,
-            r3: 0,
-            r4: 0,
-            r5: 0,
-            r6: 0,
-            r7: 0,
-            r8: 0,
-            r9: 0,
-            r10: 0,
-            r11: 0,
-            r12: 0,
-            r13: 0,
-            r14: 0,
-            r15: 0,
-            r16: 0,
-            r17: 0,
-            r18: 0,
-            r19: 0,
-            r20: 0,
-            r21: 0,
-            r22: 0,
-            r23: 0,
-            r24: 0,
-            r25: 0,
-            r26: 0,
-            r27: 0,
-            r28: 0,
-            r29: 0,
-            r30: 0,
-            r31: 0,
             pc: 0,
             prog_end: 0,
+            registers: Default::default(),
             mem: Default::default(),
             csrs: Default::default(),
         }
@@ -367,82 +307,28 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
 
     // get a register value
     fn get_r(ref self: RISCVMachine, r: u32) -> Option<u32> {
-        Option::Some(
-            match r {
-                0 => 0, // r0 is hardcoded to 0
-                1 => self.r1.clone(),
-                2 => self.r2.clone(),
-                3 => self.r3.clone(),
-                4 => self.r4.clone(),
-                5 => self.r5.clone(),
-                6 => self.r6.clone(),
-                7 => self.r7.clone(),
-                8 => self.r8.clone(),
-                9 => self.r9.clone(),
-                10 => self.r10.clone(),
-                11 => self.r11.clone(),
-                12 => self.r12.clone(),
-                13 => self.r13.clone(),
-                14 => self.r14.clone(),
-                15 => self.r15.clone(),
-                16 => self.r16.clone(),
-                17 => self.r17.clone(),
-                18 => self.r18.clone(),
-                19 => self.r19.clone(),
-                20 => self.r20.clone(),
-                21 => self.r21.clone(),
-                22 => self.r22.clone(),
-                23 => self.r23.clone(),
-                24 => self.r24.clone(),
-                25 => self.r25.clone(),
-                26 => self.r26.clone(),
-                27 => self.r27.clone(),
-                28 => self.r28.clone(),
-                29 => self.r29.clone(),
-                30 => self.r30.clone(),
-                31 => self.r31.clone(),
-                _ => { return Option::None; },
-            }
-        )
+        if r > 31 {
+            // invalid register
+            return Option::None;
+        }
+        if r == 0 {
+            // r0 is hardcoded to 0
+            return Option::Some(0);
+        }
+        Option::Some(self.registers.get(r.into()))
     }
 
     // set a register value
     fn set_r(ref self: RISCVMachine, r: u32, value: u32) -> bool {
-        match r {
-            0 => {}, // r0 is hardcoded to 0
-            1 => self.r1 = value,
-            2 => self.r2 = value,
-            3 => self.r3 = value,
-            4 => self.r4 = value,
-            5 => self.r5 = value,
-            6 => self.r6 = value,
-            7 => self.r7 = value,
-            8 => self.r8 = value,
-            9 => self.r9 = value,
-            10 => self.r10 = value,
-            11 => self.r11 = value,
-            12 => self.r12 = value,
-            13 => self.r13 = value,
-            14 => self.r14 = value,
-            15 => self.r15 = value,
-            16 => self.r16 = value,
-            17 => self.r17 = value,
-            18 => self.r18 = value,
-            19 => self.r19 = value,
-            20 => self.r20 = value,
-            21 => self.r21 = value,
-            22 => self.r22 = value,
-            23 => self.r23 = value,
-            24 => self.r24 = value,
-            25 => self.r25 = value,
-            26 => self.r26 = value,
-            27 => self.r27 = value,
-            28 => self.r28 = value,
-            29 => self.r29 = value,
-            30 => self.r30 = value,
-            31 => self.r31 = value,
-            _ => { return false; },
+        if r > 31 {
+            // invalid register
+            return false;
         }
+        if r == 0 {
+            // r0 is hardcoded to 0: ignore the write
+            return true;
+        }
+        self.registers.insert(r.into(), value);
         true
     }
 

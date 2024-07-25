@@ -301,7 +301,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
 
             // Offset of the segment in the file image
-            let p_offset = match self.get_w(data, offset + 0x04) {
+            let _p_offset = match self.get_w(data, offset + 0x04) {
                 Option::Some(v) => v,
                 Option::None => {
                     res = false;
@@ -328,7 +328,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
 
             // Size of the segment in the file image
-            let p_filesz = match self.get_w(data, offset + 0x10) {
+            let _p_filesz = match self.get_w(data, offset + 0x10) {
                 Option::Some(v) => v,
                 Option::None => {
                     res = false;
@@ -366,30 +366,32 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
                 },
             };
 
-            // Load segment into machine memory
-            let mut file_cursor = p_offset;
-            let mut mem_cursor = p_vaddr;
-            loop {
-                if file_cursor >= p_offset + p_filesz {
-                    break;
-                }
-
-                let entry = match self.get_byte(data, file_cursor) {
-                    Option::Some(v) => v,
-                    Option::None => {
-                        res = false;
-                        break;
-                    },
-                };
-
-                machine.mem_set(mem_cursor, entry);
-
-                file_cursor += 1;
-                mem_cursor += 1;
-            };
-            if res == false {
-                break;
-            }
+            
+            //// Load segment into machine memory
+            //let mut file_cursor = p_offset;
+            //let mut mem_cursor = p_vaddr;
+            //loop {
+            //    if file_cursor >= p_offset + p_filesz {
+            //        break;
+            //    }
+            //
+            //    let entry = match self.get_byte(data, file_cursor) {
+            //        Option::Some(v) => v,
+            //        Option::None => {
+            //            res = false;
+            //            break;
+            //        },
+            //    };
+            //
+            //    machine.mem_set(mem_cursor, entry);
+            //
+            //    file_cursor += 1;
+            //    mem_cursor += 1;
+            //};
+            //if res == false {
+            //    break;
+            //}
+            
 
             // update cursor
             prog_index += 1;
