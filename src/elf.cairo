@@ -109,10 +109,11 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             return false;
         }
 
-        // parse program headers
-        if !self.parse_program_headers(data, ref machine) {
-            return false;
-        }
+        // NOTE: program parsing is not necessary because the program sections are already loaded into memory
+        /// parse program headers
+        //if !self.parse_program_headers(data, ref machine) {
+        //    return false;
+        //}
 
         true
     }
@@ -146,13 +147,21 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
 
             // sh_type
-            let _sh_type = match self.get_w(data, offset + 0x04) {
+            let sh_type = match self.get_w(data, offset + 0x04) {
                 Option::Some(v) => v,
                 Option::None => {
                     res = false;
                     break;
                 },
             };
+            if sh_type & 0x8 != 0 {
+                //NOBITS section: do not load
+
+                // update cursor and continue
+                section_index += 1;
+                offset += self.e_shentsize.into();
+                continue;
+            }
 
             // sh_flags
             let sh_flags = match self.get_w(data, offset + 0x08) {
@@ -164,7 +173,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
             if sh_flags & 0x02 == 0 {
                 // Does not have the SHF_ALLOC flag set: do not load
-                
+
                 // update cursor and continue
                 section_index += 1;
                 offset += self.e_shentsize.into();
@@ -285,15 +294,8 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             // read program header
 
             // type
-            match self.get_w(data, offset + 0x00) {
-                Option::Some(v) => {
-                    if v == 0x00000001 { // PT_LOAD
-                    // this is a loadable segment
-                    } else {
-                        // ignore non-loadable segments
-                        continue;
-                    }
-                },
+            let p_type = match self.get_w(data, offset + 0x00) {
+                Option::Some(v) => v,
                 Option::None => {
                     res = false;
                     break;
@@ -301,7 +303,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
 
             // Offset of the segment in the file image
-            let _p_offset = match self.get_w(data, offset + 0x04) {
+            let p_offset = match self.get_w(data, offset + 0x04) {
                 Option::Some(v) => v,
                 Option::None => {
                     res = false;
@@ -328,7 +330,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
 
             // Size of the segment in the file image
-            let _p_filesz = match self.get_w(data, offset + 0x10) {
+            let p_filesz = match self.get_w(data, offset + 0x10) {
                 Option::Some(v) => v,
                 Option::None => {
                     res = false;
@@ -337,16 +339,13 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             };
 
             // Size of the segment in memory
-            let p_memsz = match self.get_w(data, offset + 0x14) {
+            let _p_memsz = match self.get_w(data, offset + 0x14) {
                 Option::Some(v) => v,
                 Option::None => {
                     res = false;
                     break;
                 },
             };
-
-            // set program end
-            machine.set_prog_end(wrap_add(p_vaddr, p_memsz));
 
             // Flags
             let _p_flags = match self.get_w(data, offset + 0x18) {
@@ -366,32 +365,36 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
                 },
             };
 
-            
-            //// Load segment into machine memory
-            //let mut file_cursor = p_offset;
-            //let mut mem_cursor = p_vaddr;
-            //loop {
-            //    if file_cursor >= p_offset + p_filesz {
-            //        break;
-            //    }
-            //
-            //    let entry = match self.get_byte(data, file_cursor) {
-            //        Option::Some(v) => v,
-            //        Option::None => {
-            //            res = false;
-            //            break;
-            //        },
-            //    };
-            //
-            //    machine.mem_set(mem_cursor, entry);
-            //
-            //    file_cursor += 1;
-            //    mem_cursor += 1;
-            //};
-            //if res == false {
-            //    break;
-            //}
-            
+            if p_type != 0x00000001 { // not PT_LOAD
+                // ignore non-loadable segments
+                prog_index += 1;
+                offset += self.e_phentsize.into();
+                continue;
+            }
+
+            // Load segment into machine memory
+            let mut file_cursor = p_offset;
+            let mut mem_cursor = p_vaddr;
+            loop {
+                if file_cursor >= p_offset + p_filesz {
+                    break;
+                }
+
+                let entry = match self.get_byte(data, file_cursor) {
+                    Option::Some(v) => v,
+                    Option::None => {
+                        res = false;
+                        break;
+                    },
+                };
+                machine.mem_set(mem_cursor, entry);
+
+                file_cursor += 1;
+                mem_cursor += 1;
+            };
+            if res == false {
+                break;
+            }
 
             // update cursor
             prog_index += 1;

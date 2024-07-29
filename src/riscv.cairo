@@ -2,7 +2,6 @@
 pub enum FlowControl {
     Continue,
     InvalidInstruction,
-    End,
     ECall,
     EBreak,
     URet,
@@ -13,7 +12,6 @@ pub enum FlowControl {
 
 pub struct RISCVMachine {
     pc: u32,
-    prog_end: u32, // when pc reaches this value, the program ends
     registers: Felt252Dict<u32>,
     mem: Felt252Dict<u8>,
     csrs: Felt252Dict<u32>,
@@ -227,7 +225,7 @@ pub fn shl(mut v: u32, mut shift: u32) -> u32 {
 // raw bit shift right
 pub fn shr(mut v: u32, mut shift: u32) -> u32 {
     while shift != 0 {
-        v = (v & 0b01111111111111111111111111111110) / 2;
+        v = (v & 0b11111111111111111111111111111110) / 2;
         shift -= 1;
     };
     v
@@ -281,11 +279,7 @@ pub fn from_le(v: u32) -> u32 {
 pub impl RISCVMachineImpl of RISCVMachineTrait {
     fn new() -> RISCVMachine {
         RISCVMachine {
-            pc: 0,
-            prog_end: 0,
-            registers: Default::default(),
-            mem: Default::default(),
-            csrs: Default::default(),
+            pc: 0, registers: Default::default(), mem: Default::default(), csrs: Default::default(),
         }
     }
 
@@ -330,11 +324,6 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
         }
         self.registers.insert(r.into(), value);
         true
-    }
-
-    // set prog_end
-    fn set_prog_end(ref self: RISCVMachine, prog_end: u32) {
-        self.prog_end = prog_end;
     }
 
     // get a CSR value
@@ -522,10 +511,9 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
                     0b101 => {
                         // binary shifts
                         let (rd, rs1, imm) = decode_iinstr(instr);
-                        let subtype = (imm & 0b1111100000000000000000000000000)
-                            / 0b100000000000000000000000000;
-                        let shift = imm & 0b00000000000000000000000000011111;
-                        // note: the 6th bit of imm is used only in RV64
+                        let subtype = (imm & 0b111110000000) / 0b10000000;
+                        let shift = imm
+                            & 0b00000011111; // note: the 6th bit of imm is used only in RV64
                         let rs1_v = match self.get_r(rs1) {
                             Option::Some(v) => v,
                             Option::None => { return FlowControl::InvalidInstruction; },
@@ -946,13 +934,8 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
         return_v
     }
 
-    // runs a program step (instruction)
-    fn step(ref self: RISCVMachine) -> FlowControl {
-        // check for program end
-        if self.pc >= self.prog_end {
-            return FlowControl::End;
-        }
-
+    // runs a program step (instruction, flowcontrol)
+    fn step(ref self: RISCVMachine) -> (u32, FlowControl) {
         // construct a full instruction from the pc (4 bytes)
         let instr1: u32 = self.mem_get(self.pc).into();
         let instr2: u32 = self.mem_get(wrap_add(self.pc, 1)).into();
@@ -963,6 +946,6 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
             + instr3 * 0b10000000000000000
             + instr2 * 0b100000000
             + instr1;
-        self.execute_instr(instr)
+        (instr, self.execute_instr(instr))
     }
 }
