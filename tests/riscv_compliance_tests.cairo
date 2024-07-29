@@ -4,7 +4,7 @@ use riscairo::elf::ELFLoaderTrait;
 
 fn run_test(test_name: ByteArray) {
     // Read ELF file
-    let mut file_name: ByteArray = "compliance_files/out/";
+    let mut file_name: ByteArray = "test_elfs/riscv_compliance_checks/out/";
     file_name.append(@test_name);
     let elf_file = FileTrait::new(file_name);
     let elf_arr = read_txt(@elf_file);
