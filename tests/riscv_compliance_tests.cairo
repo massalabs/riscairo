@@ -1,29 +1,12 @@
-use snforge_std::fs::{FileTrait, read_txt, FileParser};
+use snforge_std::fs::{FileTrait, read_txt};
 use riscairo::riscv::{RISCVMachineTrait, RISCVMachine, FlowControl};
-use riscairo::elf::ELFLoaderTrait;
+use super::tools::load_elf;
 
 fn run_test(test_name: ByteArray) {
-    // Read ELF file
-    let mut file_name: ByteArray = "test_elfs/riscv_compliance_checks/out/";
-    file_name.append(@test_name);
-    let elf_file = FileTrait::new(file_name);
-    let elf_arr = read_txt(@elf_file);
-    let mut elf_bytes: Array<u8> = ArrayTrait::new();
-    let mut i: u32 = 0;
-    loop {
-        if i >= elf_arr.len() {
-            break;
-        }
-        elf_bytes.append(elf_arr.at(i).clone().try_into().unwrap());
-        i += 1;
-    };
-    let mut machine = RISCVMachineTrait::new();
-    let mut elf_loader = ELFLoaderTrait::new();
-
-    // parse ELF data and load initial CPU and RAM states
-    if !elf_loader.load(@elf_bytes, ref machine) {
-        panic!("Failed to parse ELF data.");
-    }
+    // load ELF file
+    let mut file_path: ByteArray = "test_elfs/riscv_compliance_checks/out/";
+    file_path.append(@test_name);
+    let mut machine = load_elf(file_path);
 
     // run CPU cycles
     loop {
@@ -40,7 +23,7 @@ fn run_test(test_name: ByteArray) {
         };
     };
 
-    // read CPU output
+    // read and check CPU output
     let syscall_num = machine.get_r(17).unwrap();
     let return_status = machine.get_r(10).unwrap();
     if syscall_num != 93 {

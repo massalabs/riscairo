@@ -1,0 +1,12 @@
+[build]
+target = "riscv32i-unknown-none-elf"
+rustflags = [
+    "-C", "link-arg=-Tlink.ld",
+    "-C", "link-arg=--gc-sections",
+    "-C", "link-arg=--strip-all",
+    "-C", "link-arg=--nostdlib",
+    "-C", "link-arg=--strip-debug",
+    "-C", "link-arg=--build-id=none",
+    "-C", "link-arg=--no-warn-mismatch",
+    "-C", "link-arg=-n",
+]

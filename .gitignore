@@ -1,3 +1,5 @@
 target
 .snfoundry_cache
 test_elfs/riscv_compliance_checks/out/
+test_elfs/rust_tests/out/
+rust_tests/target

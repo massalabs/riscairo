@@ -24,6 +24,9 @@ def main():
     # convert RISCV CPU compliance checks
     convert_folder(os.path.join('riscv_compliance_checks', 'in'), os.path.join('riscv_compliance_checks', 'out'))
 
+    # convert rust tests
+    convert_folder(os.path.join('rust_tests', 'in'), os.path.join('rust_tests', 'out'))
+
     print("ELF conversion done.")
 
 
