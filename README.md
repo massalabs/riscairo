@@ -7,7 +7,7 @@ RISC-V ELF interpreter in cairo.
 This cairo library implements an ELF file parser and a RISC-V virtual machine.
 The machine implements the RV32i instruction set, without extensions.
 
-The VM was tested for compliance under the `rv32ui-p-*` test suite from (see https://github.com/riscv-software-src/riscv-tests).
+The VM was tested for compliance under the `rv32ui-p-*` test suite from https://github.com/riscv-software-src/riscv-tests .
 
 For usage information, please check https://github.com/massalabs/riscairo_template .
 
