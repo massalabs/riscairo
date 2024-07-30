@@ -1,12 +1,22 @@
 use snforge_std::fs::{FileTrait, read_txt};
-use riscairo::riscv::{RISCVMachineTrait, RISCVMachine, FlowControl};
-use super::tools::load_elf;
+use riscairo::riscv_call;
+use super::tools::load_file;
+use riscairo::elf::ELFLoaderTrait;
+use riscairo::riscv::{RISCVMachineTrait, FlowControl};
 
 fn run_test(test_name: ByteArray) {
     // load ELF file
     let mut file_path: ByteArray = "test_elfs/riscv_compliance_checks/out/";
     file_path.append(@test_name);
-    let mut machine = load_elf(file_path);
+    let bytecode = load_file(file_path);
+
+    let mut machine = RISCVMachineTrait::new();
+    let mut elf_loader = ELFLoaderTrait::new();
+
+    // parse ELF data and load initial CPU and RAM states
+    if !elf_loader.load(@bytecode, ref machine) {
+        panic!("Failed to parse ELF data.");
+    }
 
     // run CPU cycles
     loop {
