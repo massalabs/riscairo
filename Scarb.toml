@@ -9,3 +9,8 @@ edition = "2023_11"
 
 [dev-dependencies]
 snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.27.0" }
+
+[lib]
+sierra = true        # Enable Sierra codegen.
+casm = true         # Enable CASM codegen.
+sierra-text = false  # Enable textual Sierra codegen.
