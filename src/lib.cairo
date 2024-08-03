@@ -13,7 +13,7 @@ const IN_FUNCT_NAME_OFFSET: u32 = IN_FUNCT_NAME_LEN_OFFSET + 4;
 const IN_FUNCT_ARGS_LEN_OFFSET: u32 = IN_FUNCT_NAME_OFFSET + 255;
 const IN_FUNCT_ARGS_OFFSET: u32 = IN_FUNCT_ARGS_LEN_OFFSET + 4;
 
-fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_args: @ByteArray) {
+fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_args: @Array<u8>) {
     let input_func_len = input_func.len();
     let input_args_len = input_args.len();
 
@@ -37,10 +37,7 @@ fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_ar
 
     // set the func name in RAM using a loop
     let mut i: u32 = 0;
-    loop {
-        if i >= input_func_len {
-            break;
-        }
+    while i < input_func_len {
         machine.mem_set(IN_FUNCT_NAME_OFFSET + i, input_func[i]);
         i += 1;
     };
@@ -65,16 +62,13 @@ fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_ar
 
     // set the input args in RAM using a loop
     let mut j: u32 = 0;
-    loop {
-        if j >= input_args_len {
-            break;
-        }
-        machine.mem_set(IN_FUNCT_ARGS_OFFSET + j, input_args[j]);
+    while j < input_args_len {
+        machine.mem_set(IN_FUNCT_ARGS_OFFSET + j, *input_args.at(j));
         j += 1;
     };
 }
 
-pub fn riscv_call(bytecode: @Array<u8>, func_name: @ByteArray, args: @ByteArray) -> ByteArray {
+pub fn riscv_call(bytecode: @Array<u8>, func_name: @ByteArray, args: @Array<u8>) -> Array<u8> {
     // load ELF file
     let mut machine = RISCVMachineTrait::new();
     let mut elf_loader = ELFLoaderTrait::new();
@@ -98,16 +92,21 @@ pub fn riscv_call(bytecode: @Array<u8>, func_name: @ByteArray, args: @ByteArray)
                 let category: u32 = machine.get_r(10).unwrap();
                 let len: u32 = machine.get_r(11).unwrap();
                 let addr: u32 = machine.get_r(12).unwrap();
-                let mut res_bytes: ByteArray = "";
-                let mut i: u32 = 0;
-                while i < len {
-                    let v = machine.mem_get(addr + i);
-                    res_bytes.append_byte(v);
-                    i += 1;
-                };
                 if category == ECALL_CATEGORY_PANIC {
-                    panic!("CPU: Guest panicked: {}", res_bytes);
+                    let mut res_msg: ByteArray = "";
+                    let mut i: u32 = 0;
+                    while i < len {
+                        res_msg.append_byte(machine.mem_get(addr + i));
+                        i += 1;
+                    };
+                    panic!("CPU: Guest panicked: {}", res_msg);
                 } else if category == ECALL_CATEGORY_RETURN {
+                    let mut res_bytes = ArrayTrait::<u8>::new();
+                    let mut i: u32 = 0;
+                    while i < len {
+                        res_bytes.append(machine.mem_get(addr + i));
+                        i += 1;
+                    };
                     break res_bytes;
                 } else {
                     panic!("CPU: Unknown ECall category: {}", category);
