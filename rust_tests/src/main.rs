@@ -9,29 +9,41 @@ mod rv;
 
 use alloc::vec::Vec;
 
-fn add(args: &[u8]) -> Vec<u8> {
-    if args.len() != 2 {
-        panic!("Invalid arguments");
+fn array_reverse(args: &[u8]) -> Vec<u8> {
+    let mut res = Vec::with_capacity(args.len());
+    for v in args.iter().rev() {
+        res.push(*v);
     }
-    [args[0] + args[1]].to_vec()
-}
-
-fn sub(args: &[u8]) -> Vec<u8> {
-    if args.len() != 2 {
-        panic!("Invalid arguments");
-    }
-    [args[0] - args[1]].to_vec()
-}
-
-fn prepend_hello(args: &[u8]) -> Vec<u8> {
-    let mut res = Vec::new();
-    res.extend_from_slice(b"hello ");
-    res.extend_from_slice(args);
     res
 }
 
+fn fibonacci(args: &[u8]) -> Vec<u8> {
+    let val = u32::from_le_bytes(args.try_into().expect("Invalid arguments"));
+
+    let mut a = 0u32;
+    let mut b = 1u32;
+
+    for _ in 0..val {
+        let c = a + b;
+        a = b;
+        b = c;
+    }
+
+    b.to_le_bytes().to_vec()
+}
+
+fn find_max(args: &[u8]) -> Vec<u8> {
+    let mut max = 0u8;
+    for i in args {
+        if *i > max {
+            max = *i;
+        }
+    }
+    [max].to_vec()
+}
+
 export_fn!(
-    "add" => add,
-    "sub" => sub,
-    "prepend_hello" => prepend_hello
+    "array_reverse" => array_reverse,
+    "fibonacci" => fibonacci,
+    "find_max" => find_max
 );
