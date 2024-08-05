@@ -935,7 +935,7 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
     }
 
     // runs a program step (instruction, flowcontrol)
-    fn step(ref self: RISCVMachine) -> (u32, FlowControl) {
+    fn step(ref self: RISCVMachine) -> FlowControl {
         // construct a full instruction from the pc (4 bytes)
         let instr1: u32 = self.mem_get(self.pc).into();
         let instr2: u32 = self.mem_get(wrap_add(self.pc, 1)).into();
@@ -946,6 +946,6 @@ pub impl RISCVMachineImpl of RISCVMachineTrait {
             + instr3 * 0b10000000000000000
             + instr2 * 0b100000000
             + instr1;
-        (instr, self.execute_instr(instr))
+        self.execute_instr(instr)
     }
 }

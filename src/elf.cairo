@@ -4,16 +4,9 @@ use super::riscv::{RISCVMachine, RISCVMachineImpl, RISCVMachineTrait, wrap_add};
 pub struct ELFLoader {
     format32: bool, // true if 32 bit format
     little_endian: bool, // true if little endian
-    e_entry: u32, // Program entry point
-    e_phoff: u32, // Program header offset
-    e_shoff: u32, // Section header offset
-    e_flags: u32, // Flags
-    e_ehsize: u16, // Header size
-    e_phentsize: u16, // Program header size
-    e_phnum: u16, // Program header count
-    e_shentsize: u16, // Section header size
-    e_shnum: u16, // Section header count
-    e_shstrndx: u16, // Section header string table index
+    e_shoff: u32, // section header offset
+    e_shentsize: u16, // section header size
+    e_shnum: u16, // section header count
 }
 
 #[generate_trait]
@@ -22,16 +15,9 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         ELFLoader {
             format32: false,
             little_endian: false,
-            e_entry: 0,
-            e_phoff: 0,
             e_shoff: 0,
-            e_flags: 0,
-            e_ehsize: 0,
-            e_phentsize: 0,
-            e_phnum: 0,
             e_shentsize: 0,
             e_shnum: 0,
-            e_shstrndx: 0,
         }
     }
 
@@ -109,12 +95,6 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             return false;
         }
 
-        // NOTE: program parsing is not necessary because the program sections are already loaded into memory
-        /// parse program headers
-        //if !self.parse_program_headers(data, ref machine) {
-        //    return false;
-        //}
-
         true
     }
 
@@ -122,29 +102,13 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         ref self: ELFLoader, data: @Array<u8>, ref machine: RISCVMachine
     ) -> bool {
         // The section headers start at e_shoff and are e_shnum in number, each with a size of e_shentsize.
-        // The section header string table index is e_shstrndx.
 
         let mut section_index = 0;
         let mut offset = self.e_shoff;
         let mut res = true;
 
-        loop {
-            // check for termination
-            if section_index == self.e_shnum {
-                break;
-            }
-
+        while section_index < self.e_shnum {
             // read section header
-
-            // sh_name
-            // An offset to a string in the .shstrtab section that represents the name of this section.
-            let _sh_name = match self.get_w(data, offset + 0x00) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
 
             // sh_type
             let sh_type = match self.get_w(data, offset + 0x04) {
@@ -207,50 +171,10 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
                 },
             };
 
-            // sh_link
-            let _sh_link = match self.get_w(data, offset + 0x18) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // sh_info
-            let _sh_info = match self.get_w(data, offset + 0x1C) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // sh_addralign
-            let _sh_addralign = match self.get_w(data, offset + 0x20) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // sh_entsize
-            let _sh_entsize = match self.get_w(data, offset + 0x24) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
             // load section into memory
             let mut file_cursor = sh_offset;
             let mut mem_cursor = sh_addr;
-            loop {
-                if file_cursor >= sh_offset + sh_size {
-                    break;
-                }
-
+            while file_cursor < sh_offset + sh_size {
                 let entry = match self.get_byte(data, file_cursor) {
                     Option::Some(v) => v,
                     Option::None => {
@@ -276,160 +200,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         res
     }
 
-    fn parse_program_headers(
-        ref self: ELFLoader, data: @Array<u8>, ref machine: RISCVMachine
-    ) -> bool {
-        // The program header table tells the system how to create a process image.
-        // It is found at file offset e_phoff, and consists of e_phnum entries, each with size e_phentsize.
-
-        let mut prog_index = 0;
-        let mut offset = self.e_phoff;
-        let mut res = true;
-        loop {
-            // check for termination
-            if prog_index == self.e_phnum {
-                break;
-            }
-
-            // read program header
-
-            // type
-            let p_type = match self.get_w(data, offset + 0x00) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // Offset of the segment in the file image
-            let p_offset = match self.get_w(data, offset + 0x04) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // Virtual address of the segment in memory
-            let p_vaddr = match self.get_w(data, offset + 0x08) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // Physical address
-            let _p_paddr = match self.get_w(data, offset + 0x0C) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // Size of the segment in the file image
-            let p_filesz = match self.get_w(data, offset + 0x10) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // Size of the segment in memory
-            let _p_memsz = match self.get_w(data, offset + 0x14) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // Flags
-            let _p_flags = match self.get_w(data, offset + 0x18) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // Alignment
-            let _p_align = match self.get_w(data, offset + 0x1C) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            if p_type != 0x00000001 { // not PT_LOAD
-                // ignore non-loadable segments
-                prog_index += 1;
-                offset += self.e_phentsize.into();
-                continue;
-            }
-
-            // Load segment into machine memory
-            let mut file_cursor = p_offset;
-            let mut mem_cursor = p_vaddr;
-            loop {
-                if file_cursor >= p_offset + p_filesz {
-                    break;
-                }
-
-                let entry = match self.get_byte(data, file_cursor) {
-                    Option::Some(v) => v,
-                    Option::None => {
-                        res = false;
-                        break;
-                    },
-                };
-                machine.mem_set(mem_cursor, entry);
-
-                file_cursor += 1;
-                mem_cursor += 1;
-            };
-            if res == false {
-                break;
-            }
-
-            // update cursor
-            prog_index += 1;
-            offset += self.e_phentsize.into();
-        };
-        res
-    }
-
     fn parse_elf_header(ref self: ELFLoader, data: @Array<u8>, ref machine: RISCVMachine) -> bool {
-        // magic
-        match self.get_byte(data, 0x00 + 0) {
-            Option::Some(v) => { if v != 0x7F {
-                return false;
-            } },
-            Option::None => { return false; },
-        }
-        match self.get_byte(data, 0x00 + 1) {
-            Option::Some(v) => { if v != 0x45 {
-                return false;
-            } },
-            Option::None => { return false; },
-        }
-        match self.get_byte(data, 0x00 + 2) {
-            Option::Some(v) => { if v != 0x4c {
-                return false;
-            } },
-            Option::None => { return false; },
-        }
-        match self.get_byte(data, 0x00 + 3) {
-            Option::Some(v) => { if v != 0x46 {
-                return false;
-            } },
-            Option::None => { return false; },
-        }
-
         // bit depth
         match self.get_byte(data, 0x04) {
             Option::Some(v) => {
@@ -464,95 +235,14 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             Option::None => { return false; },
         }
 
-        // version
-        match self.get_byte(data, 0x06) {
-            Option::Some(v) => { if v != 1 {
-                return false;
-            } },
-            Option::None => { return false; },
-        }
-
-        // OS ABI
-        match self.get_byte(data, 0x07) {
-            Option::Some(v) => { if v != 0 {
-                return false;
-            } },
-            Option::None => { return false; },
-        }
-
-        // Ignore OS ABI version at 0x08
-
-        // Ignore padding at 0x09
-
-        // Type
-        match self.get_halfw(data, 0x10) {
-            Option::Some(v) => {
-                if v != 0x02 {
-                    // unsupported elf type (only ET_EXEC=0x02 is supported)
-                    return false;
-                }
-            },
-            Option::None => { return false; },
-        }
-
-        // Machine
-        match self.get_halfw(data, 0x12) {
-            Option::Some(v) => {
-                if v != 0xF3 {
-                    // unsupported machine (only EM_RISCV=0xF3 is supported)
-                    return false;
-                }
-            },
-            Option::None => { return false; },
-        }
-
-        // Version
-        match self.get_w(data, 0x14) {
-            Option::Some(v) => { if v != 1 {
-                return false;
-            } },
-            Option::None => { return false; },
-        }
-
         // Entry point
-        self.e_entry = match self.get_w(data, 0x18) {
-            Option::Some(v) => v,
-            Option::None => { return false; },
-        };
-        machine.set_pc(self.e_entry);
-
-        // Program header offset
-        self.e_phoff = match self.get_w(data, 0x1C) {
-            Option::Some(v) => v,
+        match self.get_w(data, 0x18) {
+            Option::Some(v) => machine.set_pc(v),
             Option::None => { return false; },
         };
 
         // Section header offset
         self.e_shoff = match self.get_w(data, 0x20) {
-            Option::Some(v) => v,
-            Option::None => { return false; },
-        };
-
-        // Flags
-        self.e_flags = match self.get_w(data, 0x24) {
-            Option::Some(v) => v,
-            Option::None => { return false; },
-        };
-
-        // Header size
-        self.e_ehsize = match self.get_halfw(data, 0x28) {
-            Option::Some(v) => v,
-            Option::None => { return false; },
-        };
-
-        // Program header size
-        self.e_phentsize = match self.get_halfw(data, 0x2A) {
-            Option::Some(v) => v,
-            Option::None => { return false; },
-        };
-
-        // Program header count
-        self.e_phnum = match self.get_halfw(data, 0x2C) {
             Option::Some(v) => v,
             Option::None => { return false; },
         };
@@ -565,12 +255,6 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
 
         // Section header count
         self.e_shnum = match self.get_halfw(data, 0x30) {
-            Option::Some(v) => v,
-            Option::None => { return false; },
-        };
-
-        // Section header string table index
-        self.e_shstrndx = match self.get_halfw(data, 0x32) {
             Option::Some(v) => v,
             Option::None => { return false; },
         };

@@ -20,8 +20,7 @@ fn run_test(test_name: ByteArray) {
 
     // run CPU cycles
     loop {
-        let (_instr, ctl) = machine.step();
-        match ctl {
+        match machine.step() {
             FlowControl::Continue => {},
             FlowControl::InvalidInstruction => { panic!("CPU signalled an invalid instruction."); },
             FlowControl::ECall => { break; },

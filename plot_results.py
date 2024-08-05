@@ -45,6 +45,9 @@ def parse_test_report(filename):
             'builtins': {k: int(v) for k, v in builtins_dict.items()}
         })
 
+    # Sort the test results by test_name, category, and input_data_size
+    test_results.sort(key=lambda x: (x['test_name'], x['category'], x['input_data_size']))
+
     return test_results
 
 def plot_results(test_results):
@@ -60,7 +63,7 @@ def plot_results(test_results):
         gas_values = [data['gas'] for data in test_data]
         categories = [data['category'] for data in test_data]
         
-        # Sort data by input size
+        # Sort data by input complexity
         sorted_indices = np.argsort(input_sizes)
         input_sizes = np.array(input_sizes)[sorted_indices]
         gas_values = np.array(gas_values)[sorted_indices]
@@ -77,7 +80,7 @@ def plot_results(test_results):
             ax.scatter(input_sizes[i], gas_values[i], color=color_map[category], marker=marker_map[category], label=label)
             plotted_labels.add(category)
 
-        ax.set_xlabel('Input Size')
+        ax.set_xlabel('Input Complexity')
         ax.set_ylabel('Gas', color='tab:blue')
         ax.tick_params(axis='y', labelcolor='tab:blue')
         ax.set_title(f'Test: {test_name}')
@@ -96,8 +99,8 @@ def plot_results(test_results):
                 coefficients = np.polyfit(x, y, 1)  # Linear fit
                 slope, intercept = coefficients
                 print(f"Linear fit for {label_map[category]} in {test_name}:")
-                print(f"  Offset: {intercept:.2f}")
-                print(f"  Gas per input size: {slope:.2f}")
+                print(f"  Intercept (gas used at zero input complexity): {intercept:.2f}")
+                print(f"  Slope (gas per unit of input complexity): {slope:.2f}")
                 
                 # Plot the linear fit line
                 fit_y = intercept + slope * x

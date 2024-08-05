@@ -82,36 +82,11 @@ pub fn riscv_call(bytecode: @Array<u8>, func_name: @ByteArray, args: @Array<u8>)
     write_args_to_ram(ref machine, func_name, args);
 
     // run the machine
-    let res = loop {
-        let (_instr, ctl) = machine.step();
-        match ctl {
+    loop {
+        match machine.step() {
             FlowControl::Continue => {},
             FlowControl::InvalidInstruction => { panic!("CPU signalled an invalid instruction."); },
-            FlowControl::ECall => {
-                // read output
-                let category: u32 = machine.get_r(10).unwrap();
-                let len: u32 = machine.get_r(11).unwrap();
-                let addr: u32 = machine.get_r(12).unwrap();
-                if category == ECALL_CATEGORY_PANIC {
-                    let mut res_msg: ByteArray = "";
-                    let mut i: u32 = 0;
-                    while i < len {
-                        res_msg.append_byte(machine.mem_get(addr + i));
-                        i += 1;
-                    };
-                    panic!("CPU: Guest panicked: {}", res_msg);
-                } else if category == ECALL_CATEGORY_RETURN {
-                    let mut res_bytes = ArrayTrait::<u8>::new();
-                    let mut i: u32 = 0;
-                    while i < len {
-                        res_bytes.append(machine.mem_get(addr + i));
-                        i += 1;
-                    };
-                    break res_bytes;
-                } else {
-                    panic!("CPU: Unknown ECall category: {}", category);
-                }
-            },
+            FlowControl::ECall => { break; },
             FlowControl::EBreak => {},
             FlowControl::URet => {},
             FlowControl::SRet => {},
@@ -120,5 +95,27 @@ pub fn riscv_call(bytecode: @Array<u8>, func_name: @ByteArray, args: @Array<u8>)
         };
     };
 
-    res
+    // read output
+    let category: u32 = machine.get_r(10).unwrap();
+    let len: u32 = machine.get_r(11).unwrap();
+    let addr: u32 = machine.get_r(12).unwrap();
+    let mut res_bytes = ArrayTrait::<u8>::new();
+    if category == ECALL_CATEGORY_PANIC {
+        let mut res_msg: ByteArray = "";
+        let mut i: u32 = 0;
+        while i < len {
+            res_msg.append_byte(machine.mem_get(addr + i));
+            i += 1;
+        };
+        panic!("CPU: Guest panicked: {}", res_msg);
+    } else if category == ECALL_CATEGORY_RETURN {
+        let mut i: u32 = 0;
+        while i < len {
+            res_bytes.append(machine.mem_get(addr + i));
+            i += 1;
+        };
+    } else {
+        panic!("CPU: Unknown ECall category: {}", category);
+    }
+    res_bytes
 }
