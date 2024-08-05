@@ -71,7 +71,7 @@ def plot_results(test_results):
 
         color_map = {'cpu': 'b', 'local': 'r'}
         marker_map = {'cpu': 'o', 'local': 's'}
-        label_map = {'cpu': 'CPU', 'local': 'Local'}
+        label_map = {'cpu': 'In Rust guest within the Riscairo VM', 'local': 'In native Cairo'}
 
         plotted_labels = set()
         for i in range(len(input_sizes)):
