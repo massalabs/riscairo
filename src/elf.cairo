@@ -11,12 +11,7 @@ pub struct ELFLoader {
 #[generate_trait]
 pub impl ELFLoaderImpl of ELFLoaderTrait {
     fn new() -> ELFLoader {
-        ELFLoader {
-            little_endian: false,
-            e_shoff: 0,
-            e_shentsize: 0,
-            e_shnum: 0,
-        }
+        ELFLoader { little_endian: false, e_shoff: 0, e_shentsize: 0, e_shnum: 0, }
     }
 
     fn get_byte(ref self: ELFLoader, data: @Array<u8>, offset: u32) -> Option<u8> {
@@ -105,75 +100,46 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         let mut offset = self.e_shoff;
         let mut res = true;
 
-        while section_index < self.e_shnum {
-            // read section header
+        while section_index < self
+            .e_shnum {
+                // read section header
 
-            // sh_type
-            let sh_type = match self.get_w(data, offset + 0x04) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-            if sh_type & 0x8 != 0 {
-                //NOBITS section: do not load
+                // sh_type
+                let sh_type = match self.get_w(data, offset + 0x04) {
+                    Option::Some(v) => v,
+                    Option::None => {
+                        res = false;
+                        break;
+                    },
+                };
+                if sh_type & 0x8 != 0 {
+                    //NOBITS section: do not load
 
-                // update cursor and continue
-                section_index += 1;
-                offset += self.e_shentsize.into();
-                continue;
-            }
+                    // update cursor and continue
+                    section_index += 1;
+                    offset += self.e_shentsize.into();
+                    continue;
+                }
 
-            // sh_flags
-            let sh_flags = match self.get_w(data, offset + 0x08) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-            if sh_flags & 0x02 == 0 {
-                // Does not have the SHF_ALLOC flag set: do not load
+                // sh_flags
+                let sh_flags = match self.get_w(data, offset + 0x08) {
+                    Option::Some(v) => v,
+                    Option::None => {
+                        res = false;
+                        break;
+                    },
+                };
+                if sh_flags & 0x02 == 0 {
+                    // Does not have the SHF_ALLOC flag set: do not load
 
-                // update cursor and continue
-                section_index += 1;
-                offset += self.e_shentsize.into();
-                continue;
-            }
+                    // update cursor and continue
+                    section_index += 1;
+                    offset += self.e_shentsize.into();
+                    continue;
+                }
 
-            // sh_addr
-            let sh_addr = match self.get_w(data, offset + 0x0C) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // sh_offset
-            let sh_offset = match self.get_w(data, offset + 0x10) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // sh_size
-            let sh_size = match self.get_w(data, offset + 0x14) {
-                Option::Some(v) => v,
-                Option::None => {
-                    res = false;
-                    break;
-                },
-            };
-
-            // load section into memory
-            let mut file_cursor = sh_offset;
-            let mut mem_cursor = sh_addr;
-            while file_cursor < sh_offset + sh_size {
-                let entry = match self.get_byte(data, file_cursor) {
+                // sh_addr
+                let sh_addr = match self.get_w(data, offset + 0x0C) {
                     Option::Some(v) => v,
                     Option::None => {
                         res = false;
@@ -181,19 +147,48 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
                     },
                 };
 
-                machine.mem_set(mem_cursor, entry);
+                // sh_offset
+                let sh_offset = match self.get_w(data, offset + 0x10) {
+                    Option::Some(v) => v,
+                    Option::None => {
+                        res = false;
+                        break;
+                    },
+                };
 
-                file_cursor += 1;
-                mem_cursor += 1;
+                // sh_size
+                let sh_size = match self.get_w(data, offset + 0x14) {
+                    Option::Some(v) => v,
+                    Option::None => {
+                        res = false;
+                        break;
+                    },
+                };
+
+                // load section into memory
+                let mut file_cursor = sh_offset;
+                let mut mem_cursor = sh_addr;
+                let end_iter = sh_offset + sh_size;
+                while file_cursor < end_iter {
+                    let entry = match self.get_byte(data, file_cursor) {
+                        Option::Some(v) => v,
+                        Option::None => {
+                            res = false;
+                            break;
+                        },
+                    };
+                    machine.mem_set(mem_cursor, entry);
+                    file_cursor += 1;
+                    mem_cursor += 1;
+                };
+                if res == false {
+                    break;
+                }
+
+                // update cursor
+                section_index += 1;
+                offset += self.e_shentsize.into();
             };
-            if res == false {
-                break;
-            }
-
-            // update cursor
-            section_index += 1;
-            offset += self.e_shentsize.into();
-        };
 
         res
     }
@@ -202,8 +197,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         // bit depth
         match self.get_byte(data, 0x04) {
             Option::Some(v) => {
-                if v == 1 {
-                    // 32-bit
+                if v == 1 {// 32-bit
                 } else if v == 2 {
                     // 64-bit
                     // unsupported for now

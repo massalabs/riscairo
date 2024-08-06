@@ -5,94 +5,10 @@
 Collected 59 test(s) from riscairo package
 Running 0 test(s) from src/
 Running 59 test(s) from tests/
-[PASS] tests::rust_tests::test_fibonacci_local_40 (gas: ~7)
-        steps: 1035
+[PASS] tests::rust_tests::test_fibonacci_local_30 (gas: ~5)
+        steps: 785
         memory holes: 9
-        builtins: ("range_check_builtin": 162)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_fibonacci_local_20 (gas: ~4)
-        steps: 535
-        memory holes: 9
-        builtins: ("range_check_builtin": 82)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_find_max_local_10 (gas: ~3)
-        steps: 440
-        memory holes: 45
-        builtins: ("range_check_builtin": 56)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_array_reverse_local_100 (gas: ~29)
-        steps: 7884
-        memory holes: 9
-        builtins: ("range_check_builtin": 703)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_find_max_local_100 (gas: ~21)
-        steps: 3852
-        memory holes: 597
-        builtins: ("range_check_builtin": 504)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_find_max_local_50 (gas: ~11)
-        steps: 1964
-        memory holes: 285
-        builtins: ("range_check_builtin": 256)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_auipc (gas: ~1898)
-        steps: 409619
-        memory holes: 41504
-        builtins: ("range_check_builtin": 47439, "bitwise_builtin": 729)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_andi (gas: ~2367)
-        steps: 517390
-        memory holes: 100815
-        builtins: ("range_check_builtin": 59155, "bitwise_builtin": 1839)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_xori (gas: ~2379)
-        steps: 520352
-        memory holes: 104334
-        builtins: ("range_check_builtin": 59461, "bitwise_builtin": 1875)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_jal (gas: ~1911)
-        steps: 412287
-        memory holes: 40367
-        builtins: ("range_check_builtin": 47756, "bitwise_builtin": 719)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_addi (gas: ~2600)
-        steps: 569664
-        memory holes: 120255
-        builtins: ("range_check_builtin": 64986, "bitwise_builtin": 2207)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_slli (gas: ~2644)
-        steps: 582277
-        memory holes: 119620
-        builtins: ("range_check_builtin": 66088, "bitwise_builtin": 2578)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_array_reverse_local_50 (gas: ~15)
-        steps: 3984
-        memory holes: 9
-        builtins: ("range_check_builtin": 353)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_bltu (gas: ~2725)
-        steps: 598121
-        memory holes: 151997
-        builtins: ("range_check_builtin": 68102, "bitwise_builtin": 2730)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_array_reverse_local_10 (gas: ~3)
-        steps: 856
-        memory holes: 9
-        builtins: ("range_check_builtin": 73)
+        builtins: ("range_check_builtin": 122)
         syscalls: ()
         
 [PASS] tests::rust_tests::test_fibonacci_local_10 (gas: ~2)
@@ -101,262 +17,346 @@ Running 59 test(s) from tests/
         builtins: ("range_check_builtin": 42)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_bne (gas: ~2703)
-        steps: 593001
-        memory holes: 142305
-        builtins: ("range_check_builtin": 67564, "bitwise_builtin": 2734)
+[PASS] tests::riscv_compliance_tests::test_cpu_simple (gas: ~1778)
+        steps: 384649
+        memory holes: 32810
+        builtins: ("range_check_builtin": 44447, "bitwise_builtin": 604)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_xor (gas: ~3238)
-        steps: 719933
-        memory holes: 221666
-        builtins: ("range_check_builtin": 80926, "bitwise_builtin": 3861)
+[PASS] tests::riscv_compliance_tests::test_cpu_auipc (gas: ~1873)
+        steps: 406437
+        memory holes: 40244
+        builtins: ("range_check_builtin": 46803, "bitwise_builtin": 729)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_beq (gas: ~2703)
-        steps: 592919
-        memory holes: 142326
-        builtins: ("range_check_builtin": 67562, "bitwise_builtin": 2730)
+[PASS] tests::rust_tests::test_find_max_local_10 (gas: ~3)
+        steps: 440
+        memory holes: 45
+        builtins: ("range_check_builtin": 56)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_fence_i (gas: ~3583)
-        steps: 773106
-        memory holes: 142372
-        builtins: ("range_check_builtin": 89557, "bitwise_builtin": 2921)
+[PASS] tests::riscv_compliance_tests::test_cpu_bge (gas: ~2742)
+        steps: 606935
+        memory holes: 145611
+        builtins: ("range_check_builtin": 68540, "bitwise_builtin": 2991)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_add (gas: ~3320)
-        steps: 734706
-        memory holes: 214240
-        builtins: ("range_check_builtin": 82985, "bitwise_builtin": 3956)
+[PASS] tests::riscv_compliance_tests::test_cpu_andi (gas: ~2326)
+        steps: 512248
+        memory holes: 98771
+        builtins: ("range_check_builtin": 58127, "bitwise_builtin": 1839)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_slt (gas: ~3316)
-        steps: 736009
-        memory holes: 212774
-        builtins: ("range_check_builtin": 82893, "bitwise_builtin": 4052)
+[PASS] tests::riscv_compliance_tests::test_cpu_srli (gas: ~2631)
+        steps: 578998
+        memory holes: 120681
+        builtins: ("range_check_builtin": 65755, "bitwise_builtin": 2559)
         syscalls: ()
         
-[PASS] tests::rust_tests::test_find_max_cpu_10 (gas: ~3947)
-        steps: 933252
-        memory holes: 226132
-        builtins: ("range_check_builtin": 98661, "bitwise_builtin": 3584)
+[PASS] tests::riscv_compliance_tests::test_cpu_slli (gas: ~2595)
+        steps: 576175
+        memory holes: 117192
+        builtins: ("range_check_builtin": 64868, "bitwise_builtin": 2578)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_lui (gas: ~1940)
-        steps: 419131
-        memory holes: 44491
-        builtins: ("range_check_builtin": 48497, "bitwise_builtin": 907)
+[PASS] tests::riscv_compliance_tests::test_cpu_beq (gas: ~2652)
+        steps: 586497
+        memory holes: 139770
+        builtins: ("range_check_builtin": 66278, "bitwise_builtin": 2730)
         syscalls: ()
         
-[PASS] tests::rust_tests::test_fibonacci_cpu_20 (gas: ~4055)
-        steps: 958585
-        memory holes: 246434
-        builtins: ("range_check_builtin": 101364, "bitwise_builtin": 4038)
+[PASS] tests::riscv_compliance_tests::test_cpu_bltu (gas: ~2673)
+        steps: 591699
+        memory holes: 149441
+        builtins: ("range_check_builtin": 66818, "bitwise_builtin": 2730)
         syscalls: ()
         
-[PASS] tests::rust_tests::test_fibonacci_cpu_30 (gas: ~4154)
-        steps: 981335
-        memory holes: 266784
-        builtins: ("range_check_builtin": 103834, "bitwise_builtin": 4458)
+[PASS] tests::riscv_compliance_tests::test_cpu_bne (gas: ~2652)
+        steps: 586579
+        memory holes: 139749
+        builtins: ("range_check_builtin": 66280, "bitwise_builtin": 2734)
         syscalls: ()
         
-[PASS] tests::rust_tests::test_fibonacci_cpu_40 (gas: ~4253)
-        steps: 1004085
-        memory holes: 287134
-        builtins: ("range_check_builtin": 106304, "bitwise_builtin": 4878)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_simple (gas: ~1799)
-        steps: 387231
-        memory holes: 33830
-        builtins: ("range_check_builtin": 44963, "bitwise_builtin": 604)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_array_reverse_cpu_50 (gas: ~4893)
-        steps: 1144159
-        memory holes: 404449
-        builtins: ("range_check_builtin": 122301, "bitwise_builtin": 7347)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_find_max_cpu_50 (gas: ~4584)
-        steps: 1079816
-        memory holes: 361612
-        builtins: ("range_check_builtin": 114581, "bitwise_builtin": 6344)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_find_max_cpu_100 (gas: ~5383)
-        steps: 1263874
-        memory holes: 531776
-        builtins: ("range_check_builtin": 134575, "bitwise_builtin": 9806)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_array_reverse_cpu_10 (gas: ~3992)
-        steps: 942151
-        memory holes: 231609
-        builtins: ("range_check_builtin": 99781, "bitwise_builtin": 3707)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_ori (gas: ~2376)
-        steps: 519678
-        memory holes: 103568
-        builtins: ("range_check_builtin": 59389, "bitwise_builtin": 1867)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_sltiu (gas: ~2569)
-        steps: 562349
-        memory holes: 117853
-        builtins: ("range_check_builtin": 64206, "bitwise_builtin": 2195)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_lw (gas: ~3847)
-        steps: 834098
-        memory holes: 137406
-        builtins: ("range_check_builtin": 96169, "bitwise_builtin": 2377)
-        syscalls: ()
-        
-[PASS] tests::riscv_compliance_tests::test_cpu_slti (gas: ~2574)
-        steps: 564077
-        memory holes: 118383
-        builtins: ("range_check_builtin": 64326, "bitwise_builtin": 2255)
-        syscalls: ()
-        
-[PASS] tests::rust_tests::test_fibonacci_local_30 (gas: ~5)
-        steps: 785
+[PASS] tests::rust_tests::test_array_reverse_local_10 (gas: ~3)
+        steps: 856
         memory holes: 9
-        builtins: ("range_check_builtin": 122)
+        builtins: ("range_check_builtin": 73)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_ma_data (gas: ~4389)
-        steps: 958862
-        memory holes: 187218
-        builtins: ("range_check_builtin": 109713, "bitwise_builtin": 3338)
+[PASS] tests::riscv_compliance_tests::test_cpu_or (gas: ~3167)
+        steps: 712138
+        memory holes: 218568
+        builtins: ("range_check_builtin": 79172, "bitwise_builtin": 3865)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_srl (gas: ~3621)
-        steps: 800686
-        memory holes: 231614
-        builtins: ("range_check_builtin": 90522, "bitwise_builtin": 4904)
+[PASS] tests::rust_tests::test_find_max_local_100 (gas: ~21)
+        steps: 3852
+        memory holes: 597
+        builtins: ("range_check_builtin": 504)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_sb (gas: ~4372)
-        steps: 955014
-        memory holes: 215274
-        builtins: ("range_check_builtin": 109296, "bitwise_builtin": 3949)
+[PASS] tests::riscv_compliance_tests::test_cpu_slt (gas: ~3244)
+        steps: 727027
+        memory holes: 209194
+        builtins: ("range_check_builtin": 81097, "bitwise_builtin": 4052)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_sra (gas: ~3630)
-        steps: 809737
-        memory holes: 234245
-        builtins: ("range_check_builtin": 90726, "bitwise_builtin": 6478)
+[PASS] tests::riscv_compliance_tests::test_cpu_add (gas: ~3248)
+        steps: 725724
+        memory holes: 210660
+        builtins: ("range_check_builtin": 81189, "bitwise_builtin": 3956)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_srli (gas: ~2679)
-        steps: 585100
-        memory holes: 123109
-        builtins: ("range_check_builtin": 66975, "bitwise_builtin": 2559)
+[PASS] tests::rust_tests::test_array_reverse_local_50 (gas: ~15)
+        steps: 3984
+        memory holes: 9
+        builtins: ("range_check_builtin": 353)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_blt (gas: ~2715)
-        steps: 595496
-        memory holes: 140528
-        builtins: ("range_check_builtin": 67870, "bitwise_builtin": 2808)
+[PASS] tests::riscv_compliance_tests::test_cpu_sub (gas: ~3232)
+        steps: 721430
+        memory holes: 207607
+        builtins: ("range_check_builtin": 80776, "bitwise_builtin": 3900)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_sh (gas: ~4519)
-        steps: 988756
-        memory holes: 234999
-        builtins: ("range_check_builtin": 112974, "bitwise_builtin": 4194)
+[PASS] tests::rust_tests::test_array_reverse_local_100 (gas: ~29)
+        steps: 7884
+        memory holes: 9
+        builtins: ("range_check_builtin": 703)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_bgeu (gas: ~2827)
-        steps: 621270
-        memory holes: 160396
-        builtins: ("range_check_builtin": 70664, "bitwise_builtin": 2901)
+[PASS] tests::rust_tests::test_fibonacci_cpu_30 (gas: ~3817)
+        steps: 939229
+        memory holes: 249966
+        builtins: ("range_check_builtin": 95413, "bitwise_builtin": 4458)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_sltu (gas: ~3310)
-        steps: 733553
-        memory holes: 211658
-        builtins: ("range_check_builtin": 82729, "bitwise_builtin": 3948)
+[PASS] tests::riscv_compliance_tests::test_cpu_addi (gas: ~2551)
+        steps: 563562
+        memory holes: 117827
+        builtins: ("range_check_builtin": 63766, "bitwise_builtin": 2207)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_and (gas: ~3211)
-        steps: 714785
-        memory holes: 220555
-        builtins: ("range_check_builtin": 80264, "bitwise_builtin": 3849)
+[PASS] tests::rust_tests::test_fibonacci_cpu_10 (gas: ~3619)
+        steps: 893729
+        memory holes: 209266
+        builtins: ("range_check_builtin": 90473, "bitwise_builtin": 3618)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_lb (gas: ~3744)
-        steps: 810745
-        memory holes: 126488
-        builtins: ("range_check_builtin": 93578, "bitwise_builtin": 2305)
+[PASS] tests::rust_tests::test_fibonacci_local_20 (gas: ~4)
+        steps: 535
+        memory holes: 9
+        builtins: ("range_check_builtin": 82)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_bge (gas: ~2796)
-        steps: 613677
-        memory holes: 148295
-        builtins: ("range_check_builtin": 69888, "bitwise_builtin": 2991)
+[PASS] tests::rust_tests::test_fibonacci_cpu_40 (gas: ~3916)
+        steps: 961979
+        memory holes: 270316
+        builtins: ("range_check_builtin": 97883, "bitwise_builtin": 4878)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_lbu (gas: ~3744)
-        steps: 810433
-        memory holes: 126680
-        builtins: ("range_check_builtin": 93578, "bitwise_builtin": 2257)
+[PASS] tests::riscv_compliance_tests::test_cpu_sh (gas: ~4446)
+        steps: 979613
+        memory holes: 231355
+        builtins: ("range_check_builtin": 111146, "bitwise_builtin": 4194)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_sub (gas: ~3303)
-        steps: 730412
-        memory holes: 211187
-        builtins: ("range_check_builtin": 82572, "bitwise_builtin": 3900)
+[PASS] tests::riscv_compliance_tests::test_cpu_sb (gas: ~4305)
+        steps: 946591
+        memory holes: 211918
+        builtins: ("range_check_builtin": 107612, "bitwise_builtin": 3949)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_srai (gas: ~2689)
-        steps: 590920
-        memory holes: 125459
-        builtins: ("range_check_builtin": 67207, "bitwise_builtin": 3367)
+[PASS] tests::rust_tests::test_find_max_cpu_10 (gas: ~3610)
+        steps: 891146
+        memory holes: 209314
+        builtins: ("range_check_builtin": 90240, "bitwise_builtin": 3584)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_jalr (gas: ~2105)
-        steps: 456819
-        memory holes: 65486
-        builtins: ("range_check_builtin": 52609, "bitwise_builtin": 1170)
+[PASS] tests::riscv_compliance_tests::test_cpu_xori (gas: ~2338)
+        steps: 515210
+        memory holes: 102290
+        builtins: ("range_check_builtin": 58433, "bitwise_builtin": 1875)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_lhu (gas: ~3806)
-        steps: 825000
-        memory holes: 136247
-        builtins: ("range_check_builtin": 95140, "bitwise_builtin": 2357)
+[PASS] tests::rust_tests::test_fibonacci_local_40 (gas: ~7)
+        steps: 1035
+        memory holes: 9
+        builtins: ("range_check_builtin": 162)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_lh (gas: ~3794)
-        steps: 822417
-        memory holes: 132536
-        builtins: ("range_check_builtin": 94834, "bitwise_builtin": 2369)
+[PASS] tests::riscv_compliance_tests::test_cpu_xor (gas: ~3166)
+        steps: 710951
+        memory holes: 218086
+        builtins: ("range_check_builtin": 79130, "bitwise_builtin": 3861)
         syscalls: ()
         
-[PASS] tests::rust_tests::test_array_reverse_cpu_100 (gas: ~6019)
-        steps: 1396659
-        memory holes: 620499
-        builtins: ("range_check_builtin": 150451, "bitwise_builtin": 11897)
+[PASS] tests::riscv_compliance_tests::test_cpu_and (gas: ~3142)
+        steps: 706123
+        memory holes: 217103
+        builtins: ("range_check_builtin": 78532, "bitwise_builtin": 3849)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_sll (gas: ~3524)
-        steps: 786759
-        memory holes: 226100
-        builtins: ("range_check_builtin": 88078, "bitwise_builtin": 4928)
+[PASS] tests::rust_tests::test_array_reverse_cpu_10 (gas: ~3655)
+        steps: 900045
+        memory holes: 214791
+        builtins: ("range_check_builtin": 91360, "bitwise_builtin": 3707)
         syscalls: ()
         
-[PASS] tests::rust_tests::test_fibonacci_cpu_10 (gas: ~3956)
-        steps: 935835
-        memory holes: 226084
-        builtins: ("range_check_builtin": 98894, "bitwise_builtin": 3618)
+[PASS] tests::riscv_compliance_tests::test_cpu_jalr (gas: ~2074)
+        steps: 452957
+        memory holes: 63954
+        builtins: ("range_check_builtin": 51837, "bitwise_builtin": 1170)
         syscalls: ()
         
-[PASS] tests::riscv_compliance_tests::test_cpu_or (gas: ~3239)
-        steps: 721120
-        memory holes: 222148
-        builtins: ("range_check_builtin": 80968, "bitwise_builtin": 3865)
+[PASS] tests::rust_tests::test_find_max_local_50 (gas: ~11)
+        steps: 1964
+        memory holes: 285
+        builtins: ("range_check_builtin": 256)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_lui (gas: ~1915)
+        steps: 415909
+        memory holes: 43215
+        builtins: ("range_check_builtin": 47853, "bitwise_builtin": 907)
+        syscalls: ()
+        
+[PASS] tests::rust_tests::test_array_reverse_cpu_50 (gas: ~4556)
+        steps: 1102053
+        memory holes: 387631
+        builtins: ("range_check_builtin": 113880, "bitwise_builtin": 7347)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_jal (gas: ~1885)
+        steps: 409065
+        memory holes: 39091
+        builtins: ("range_check_builtin": 47112, "bitwise_builtin": 719)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_lh (gas: ~3744)
+        steps: 816234
+        memory holes: 130076
+        builtins: ("range_check_builtin": 93598, "bitwise_builtin": 2369)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_sltiu (gas: ~2522)
+        steps: 556567
+        memory holes: 115553
+        builtins: ("range_check_builtin": 63050, "bitwise_builtin": 2195)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_blt (gas: ~2664)
+        steps: 589074
+        memory holes: 137972
+        builtins: ("range_check_builtin": 66586, "bitwise_builtin": 2808)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_fence_i (gas: ~3552)
+        steps: 769283
+        memory holes: 140856
+        builtins: ("range_check_builtin": 88793, "bitwise_builtin": 2921)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_srl (gas: ~3542)
+        steps: 790744
+        memory holes: 227650
+        builtins: ("range_check_builtin": 88534, "bitwise_builtin": 4904)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_lb (gas: ~3697)
+        steps: 804882
+        memory holes: 124156
+        builtins: ("range_check_builtin": 92406, "bitwise_builtin": 2305)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_bgeu (gas: ~2771)
+        steps: 614208
+        memory holes: 157584
+        builtins: ("range_check_builtin": 69252, "bitwise_builtin": 2901)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_sra (gas: ~3550)
+        steps: 799795
+        memory holes: 230281
+        builtins: ("range_check_builtin": 88738, "bitwise_builtin": 6478)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_slti (gas: ~2527)
+        steps: 558295
+        memory holes: 116083
+        builtins: ("range_check_builtin": 63170, "bitwise_builtin": 2255)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_srai (gas: ~2640)
+        steps: 584818
+        memory holes: 123031
+        builtins: ("range_check_builtin": 65987, "bitwise_builtin": 3367)
+        syscalls: ()
+        
+[PASS] tests::rust_tests::test_fibonacci_cpu_20 (gas: ~3718)
+        steps: 916479
+        memory holes: 229616
+        builtins: ("range_check_builtin": 92943, "bitwise_builtin": 4038)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_ori (gas: ~2335)
+        steps: 514536
+        memory holes: 101524
+        builtins: ("range_check_builtin": 58361, "bitwise_builtin": 1867)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_lw (gas: ~3795)
+        steps: 827595
+        memory holes: 134818
+        builtins: ("range_check_builtin": 94869, "bitwise_builtin": 2377)
+        syscalls: ()
+        
+[PASS] tests::rust_tests::test_find_max_cpu_100 (gas: ~5047)
+        steps: 1221768
+        memory holes: 514958
+        builtins: ("range_check_builtin": 126154, "bitwise_builtin": 9806)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_sll (gas: ~3447)
+        steps: 777137
+        memory holes: 222264
+        builtins: ("range_check_builtin": 86154, "bitwise_builtin": 4928)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_lbu (gas: ~3697)
+        steps: 804570
+        memory holes: 124348
+        builtins: ("range_check_builtin": 92406, "bitwise_builtin": 2257)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_lhu (gas: ~3757)
+        steps: 818817
+        memory holes: 133787
+        builtins: ("range_check_builtin": 93904, "bitwise_builtin": 2357)
+        syscalls: ()
+        
+[PASS] tests::rust_tests::test_array_reverse_cpu_100 (gas: ~5682)
+        steps: 1354553
+        memory holes: 603681
+        builtins: ("range_check_builtin": 142030, "bitwise_builtin": 11897)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_sltu (gas: ~3238)
+        steps: 724571
+        memory holes: 208078
+        builtins: ("range_check_builtin": 80933, "bitwise_builtin": 3948)
+        syscalls: ()
+        
+[PASS] tests::riscv_compliance_tests::test_cpu_ma_data (gas: ~4297)
+        steps: 947319
+        memory holes: 182614
+        builtins: ("range_check_builtin": 107405, "bitwise_builtin": 3338)
+        syscalls: ()
+        
+[PASS] tests::rust_tests::test_find_max_cpu_50 (gas: ~4247)
+        steps: 1037710
+        memory holes: 344794
+        builtins: ("range_check_builtin": 106160, "bitwise_builtin": 6344)
         syscalls: ()
         
 Tests: 59 passed, 0 failed, 0 skipped, 0 ignored, 0 filtered out
