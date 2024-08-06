@@ -6,7 +6,7 @@ use riscairo::riscv::{RISCVMachineTrait, FlowControl};
 
 fn run_test(test_name: ByteArray) {
     // load ELF file
-    let mut file_path: ByteArray = "test_elfs/riscv_compliance_checks/out/";
+    let mut file_path: ByteArray = "riscv_compliance_checks/out/";
     file_path.append(@test_name);
     let bytecode = load_file(file_path);
 

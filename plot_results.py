@@ -51,7 +51,7 @@ def parse_test_report(filename):
     return test_results
 
 def plot_results(test_results):
-    test_names = list(set(result['test_name'] for result in test_results))
+    test_names = sorted(set(result['test_name'] for result in test_results))
     num_tests = len(test_names)
     
     fig, axes = plt.subplots(1, num_tests, figsize=(15, 5))

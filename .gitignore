@@ -1,5 +1,8 @@
 target
 .snfoundry_cache
-test_elfs/riscv_compliance_checks/out/
-test_elfs/rust_tests/out/
+riscv_compliance_checks/out/
+rust_tests/out/
 rust_tests/target
+tests/rust_tests_bytecode.cairo
+test_report.txt
+

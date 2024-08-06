@@ -2,7 +2,6 @@ use super::riscv::{RISCVMachine, RISCVMachineImpl, RISCVMachineTrait, wrap_add};
 
 #[derive(Drop)]
 pub struct ELFLoader {
-    format32: bool, // true if 32 bit format
     little_endian: bool, // true if little endian
     e_shoff: u32, // section header offset
     e_shentsize: u16, // section header size
@@ -13,7 +12,6 @@ pub struct ELFLoader {
 pub impl ELFLoaderImpl of ELFLoaderTrait {
     fn new() -> ELFLoader {
         ELFLoader {
-            format32: false,
             little_endian: false,
             e_shoff: 0,
             e_shentsize: 0,
@@ -206,10 +204,8 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
             Option::Some(v) => {
                 if v == 1 {
                     // 32-bit
-                    self.format32 = true;
                 } else if v == 2 {
                     // 64-bit
-                    self.format32 = false;
                     // unsupported for now
                     return false;
                 } else {

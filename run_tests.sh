@@ -2,14 +2,18 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
+echo "Building rust tests..."
 cd rust_tests
 cargo clean
 cargo build --release
 cd ..
-cp rust_tests/target/riscv32i-unknown-none-elf/release/rust_tests test_elfs/rust_tests/in/
-cd test_elfs
+echo "Converting elf files..."
 python3 convert.py
-cd ..
-snforge test --detailed-resources | tee test_report.txt
-echo "All tests passed, the RISC-V CPU is working correctly."
+echo "Running cairo tests..."
+RUST_MIN_STACK=5000000 snforge test --detailed-resources | tee test_report.txt
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  echo "snforge test failed"
+  exit 1
+fi
+echo "Gathering results..."
 python3 plot_results.py
