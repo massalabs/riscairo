@@ -18,6 +18,10 @@ To run all tests and benchmarks, use `./run_tests.sh`.
 The VM is tested for compliance under the `rv32ui-p-*` test suite from https://github.com/riscv-software-src/riscv-tests .
 Those are self-test ELF files in the folder `risc_compliance_checks`.
 
+Those tests check the register and memory behavior of every instruction in the target set, as well as combinations of multiple instructions.
+
+### Benchmarks
+
 Below are benchmark results on three reference tasks:
 * `array_reverse`: return a new array containing the elements of a provided random `u8` array in reverse order. `Input complexity` is the number of elements in the array. This is a memory read-write heavy task.
 * `fibonacci`: compute the fibonacci sequence element as `u32` at index `Input complexity`. This is an iterative arithmetics-heavy task.
@@ -31,24 +35,24 @@ For each benchmark, there are two variants:
 
 Linear fits on the benchmark results:
 ```
-In Rust guest within the Riscairo VM in array_reverse:
+In Rust guest within the Riscairo VM for array_reverse:
   Intercept (gas used at zero input complexity): 3429.82
   Slope (gas per unit of input complexity): 22.52
-In native Cairo in array_reverse:
+In native Cairo for array_reverse:
   Intercept (gas used at zero input complexity): 0.28
   Slope (gas per unit of input complexity): 0.29
 
-In Rust guest within the Riscairo VM in fibonacci:
+In Rust guest within the Riscairo VM for fibonacci:
   Intercept (gas used at zero input complexity): 3520.00
   Slope (gas per unit of input complexity): 9.90
-In native Cairo in fibonacci:
+In native Cairo for fibonacci:
   Intercept (gas used at zero input complexity): 0.50
   Slope (gas per unit of input complexity): 0.16
 
-In Rust guest within the Riscairo VM in find_max:
+In Rust guest within the Riscairo VM for find_max:
   Intercept (gas used at zero input complexity): 3449.70
   Slope (gas per unit of input complexity): 15.97
-In native Cairo in find_max:
+In native Cairo for find_max:
   Intercept (gas used at zero input complexity): 1.00
   Slope (gas per unit of input complexity): 0.20
 ```
