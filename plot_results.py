@@ -98,7 +98,7 @@ def plot_results(test_results):
                 y = np.array(y)
                 coefficients = np.polyfit(x, y, 1)  # Linear fit
                 slope, intercept = coefficients
-                print(f"Linear fit for {label_map[category]} in {test_name}:")
+                print(f"{label_map[category]} in {test_name}:")
                 print(f"  Intercept (gas used at zero input complexity): {intercept:.2f}")
                 print(f"  Slope (gas per unit of input complexity): {slope:.2f}")
                 
