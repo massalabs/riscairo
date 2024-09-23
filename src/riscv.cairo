@@ -1,3 +1,5 @@
+use core::dict::Felt252Dict;
+
 #[derive(Drop)]
 pub enum FlowControl {
     Continue,
@@ -25,7 +27,8 @@ impl RISCVMachineDestruct of Destruct<RISCVMachine> {
     }
 }
 
-// Warning: divisions in cairo are not rounding the same way as in other languages, so avoid any case of rounding by only doing exact divisions
+// Warning: divisions in cairo are not rounding the same way as in other languages, so avoid any
+// case of rounding by only doing exact divisions
 
 // decode an u-type instuction
 // returns (rd, imm)
@@ -179,7 +182,7 @@ pub fn decode_signed(input: u32) -> i32 {
     }
 }
 
-// Encodes a i32 into a raw u32 format using 2-complement 
+// Encodes a i32 into a raw u32 format using 2-complement
 pub fn encode_signed(input: i32) -> u32 {
     if input >= 0 {
         // positive: simply cast

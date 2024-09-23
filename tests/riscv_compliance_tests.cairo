@@ -1,5 +1,3 @@
-use snforge_std::fs::{FileTrait, read_txt};
-use riscairo::riscv_call;
 use super::tools::load_file;
 use riscairo::elf::ELFLoaderTrait;
 use riscairo::riscv::{RISCVMachineTrait, FlowControl};
@@ -14,7 +12,7 @@ fn run_test(test_name: ByteArray) {
     let mut elf_loader = ELFLoaderTrait::new();
 
     // parse ELF data and load initial CPU and RAM states
-    if !elf_loader.load(@bytecode, ref machine) {
+    if !elf_loader.load(bytecode, ref machine) {
         panic!("Failed to parse ELF data.");
     }
 

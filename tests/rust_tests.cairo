@@ -1,14 +1,8 @@
-use snforge_std::fs::{FileTrait, read_txt};
 use riscairo::riscv_call;
-use super::tools::load_file;
-use super::rust_tests_bytecode::get_bytecode;
+use super::rust_tests_bytecode::BYTECODE;
 
 fn run_fn(func_name: @ByteArray, args: @Array<u8>) -> Array<u8> {
-    // load ELF file
-    let bytecode = get_bytecode();
-
-    // call the function
-    riscv_call(bytecode, func_name, args)
+    riscv_call(BYTECODE.span(), func_name, args)
 }
 
 fn get_array_10() -> @Array<u8> {

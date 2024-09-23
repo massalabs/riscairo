@@ -1,4 +1,4 @@
-use super::riscv::{RISCVMachine, RISCVMachineImpl, RISCVMachineTrait, wrap_add};
+use super::riscv::{RISCVMachine, RISCVMachineImpl, RISCVMachineTrait};
 
 #[derive(Drop)]
 pub struct ELFLoader {
@@ -14,14 +14,14 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         ELFLoader { little_endian: false, e_shoff: 0, e_shentsize: 0, e_shnum: 0, }
     }
 
-    fn get_byte(ref self: ELFLoader, data: @Array<u8>, offset: u32) -> Option<u8> {
+    fn get_byte(ref self: ELFLoader, data: Span<u8>, offset: u32) -> Option<u8> {
         match data.get(offset.into()) {
             Option::Some(v) => Option::Some(*v.unbox()),
             Option::None => Option::None,
         }
     }
 
-    fn get_halfw(ref self: ELFLoader, data: @Array<u8>, offset: u32) -> Option<u16> {
+    fn get_halfw(ref self: ELFLoader, data: Span<u8>, offset: u32) -> Option<u16> {
         let offset = offset.into();
         let b1 = match self.get_byte(data, offset + 0) {
             Option::Some(v) => v,
@@ -40,7 +40,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         }
     }
 
-    fn get_w(ref self: ELFLoader, data: @Array<u8>, offset: u32) -> Option<u32> {
+    fn get_w(ref self: ELFLoader, data: Span<u8>, offset: u32) -> Option<u32> {
         let offset = offset.into();
         let b1 = match self.get_byte(data, offset + 0) {
             Option::Some(v) => v,
@@ -77,7 +77,7 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
         }
     }
 
-    fn load(ref self: ELFLoader, data: @Array<u8>, ref machine: RISCVMachine) -> bool {
+    fn load(ref self: ELFLoader, data: Span<u8>, ref machine: RISCVMachine) -> bool {
         // parse elf header
         if !self.parse_elf_header(data, ref machine) {
             return false;
@@ -92,112 +92,112 @@ pub impl ELFLoaderImpl of ELFLoaderTrait {
     }
 
     fn parse_section_headers(
-        ref self: ELFLoader, data: @Array<u8>, ref machine: RISCVMachine
+        ref self: ELFLoader, data: Span<u8>, ref machine: RISCVMachine
     ) -> bool {
-        // The section headers start at e_shoff and are e_shnum in number, each with a size of e_shentsize.
+        // The section headers start at e_shoff and are e_shnum in number, each with a size of
+        // e_shentsize.
 
         let mut section_index = 0;
         let mut offset = self.e_shoff;
         let mut res = true;
 
-        while section_index < self
-            .e_shnum {
-                // read section header
+        while section_index < self.e_shnum {
+            // read section header
 
-                // sh_type
-                let sh_type = match self.get_w(data, offset + 0x04) {
-                    Option::Some(v) => v,
-                    Option::None => {
-                        res = false;
-                        break;
-                    },
-                };
-                if sh_type & 0x8 != 0 {
-                    //NOBITS section: do not load
-
-                    // update cursor and continue
-                    section_index += 1;
-                    offset += self.e_shentsize.into();
-                    continue;
-                }
-
-                // sh_flags
-                let sh_flags = match self.get_w(data, offset + 0x08) {
-                    Option::Some(v) => v,
-                    Option::None => {
-                        res = false;
-                        break;
-                    },
-                };
-                if sh_flags & 0x02 == 0 {
-                    // Does not have the SHF_ALLOC flag set: do not load
-
-                    // update cursor and continue
-                    section_index += 1;
-                    offset += self.e_shentsize.into();
-                    continue;
-                }
-
-                // sh_addr
-                let sh_addr = match self.get_w(data, offset + 0x0C) {
-                    Option::Some(v) => v,
-                    Option::None => {
-                        res = false;
-                        break;
-                    },
-                };
-
-                // sh_offset
-                let sh_offset = match self.get_w(data, offset + 0x10) {
-                    Option::Some(v) => v,
-                    Option::None => {
-                        res = false;
-                        break;
-                    },
-                };
-
-                // sh_size
-                let sh_size = match self.get_w(data, offset + 0x14) {
-                    Option::Some(v) => v,
-                    Option::None => {
-                        res = false;
-                        break;
-                    },
-                };
-
-                // load section into memory
-                let mut file_cursor = sh_offset;
-                let mut mem_cursor = sh_addr;
-                let end_iter = sh_offset + sh_size;
-                while file_cursor < end_iter {
-                    let entry = match self.get_byte(data, file_cursor) {
-                        Option::Some(v) => v,
-                        Option::None => {
-                            res = false;
-                            break;
-                        },
-                    };
-                    machine.mem_set(mem_cursor, entry);
-                    file_cursor += 1;
-                    mem_cursor += 1;
-                };
-                if res == false {
+            // sh_type
+            let sh_type = match self.get_w(data, offset + 0x04) {
+                Option::Some(v) => v,
+                Option::None => {
+                    res = false;
                     break;
-                }
+                },
+            };
+            if sh_type & 0x8 != 0 {
+                //NOBITS section: do not load
 
-                // update cursor
+                // update cursor and continue
                 section_index += 1;
                 offset += self.e_shentsize.into();
+                continue;
+            }
+
+            // sh_flags
+            let sh_flags = match self.get_w(data, offset + 0x08) {
+                Option::Some(v) => v,
+                Option::None => {
+                    res = false;
+                    break;
+                },
             };
+            if sh_flags & 0x02 == 0 {
+                // Does not have the SHF_ALLOC flag set: do not load
+
+                // update cursor and continue
+                section_index += 1;
+                offset += self.e_shentsize.into();
+                continue;
+            }
+
+            // sh_addr
+            let sh_addr = match self.get_w(data, offset + 0x0C) {
+                Option::Some(v) => v,
+                Option::None => {
+                    res = false;
+                    break;
+                },
+            };
+
+            // sh_offset
+            let sh_offset = match self.get_w(data, offset + 0x10) {
+                Option::Some(v) => v,
+                Option::None => {
+                    res = false;
+                    break;
+                },
+            };
+
+            // sh_size
+            let sh_size = match self.get_w(data, offset + 0x14) {
+                Option::Some(v) => v,
+                Option::None => {
+                    res = false;
+                    break;
+                },
+            };
+
+            // load section into memory
+            let mut file_cursor = sh_offset;
+            let mut mem_cursor = sh_addr;
+            let end_iter = sh_offset + sh_size;
+            while file_cursor < end_iter {
+                let entry = match self.get_byte(data, file_cursor) {
+                    Option::Some(v) => v,
+                    Option::None => {
+                        res = false;
+                        break;
+                    },
+                };
+                machine.mem_set(mem_cursor, entry);
+                file_cursor += 1;
+                mem_cursor += 1;
+            };
+            if res == false {
+                break;
+            }
+
+            // update cursor
+            section_index += 1;
+            offset += self.e_shentsize.into();
+        };
 
         res
     }
 
-    fn parse_elf_header(ref self: ELFLoader, data: @Array<u8>, ref machine: RISCVMachine) -> bool {
+    fn parse_elf_header(ref self: ELFLoader, data: Span<u8>, ref machine: RISCVMachine) -> bool {
         // bit depth
         match self.get_byte(data, 0x04) {
             Option::Some(v) => {
-                if v == 1 {// 32-bit
+                if v == 1 { // 32-bit
                 } else if v == 2 {
                     // 64-bit
                     // unsupported for now
