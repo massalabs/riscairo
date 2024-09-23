@@ -9,7 +9,7 @@ edition = "2024_07"
 
 [dev-dependencies]
 cairo_test = "2.8.2"
-snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.27.0" }
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.30.0" }
 
 [lib]
 sierra = true        # Enable Sierra codegen.

@@ -1,5 +1,6 @@
 target
 .snfoundry_cache
+.snfoundry_versioned_programs
 riscv_compliance_checks/out/
 rust_tests/out/
 rust_tests/target
