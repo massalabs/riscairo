@@ -68,7 +68,7 @@ fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_ar
     };
 }
 
-pub fn riscv_call(bytecode: @Array<u8>, func_name: @ByteArray, args: @Array<u8>) -> Array<u8> {
+pub fn riscv_call(bytecode: Span<u8>, func_name: @ByteArray, args: @Array<u8>) -> Array<u8> {
     // load ELF file
     let mut machine = RISCVMachineTrait::new();
     let mut elf_loader = ELFLoaderTrait::new();
