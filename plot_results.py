@@ -8,7 +8,7 @@ def parse_test_report(filename):
         content = file.read()
 
     rust_tests_pattern_cpu = re.compile(
-        r'\[PASS\] tests::rust_tests::test_(\w+)_cpu_(\d+) \(gas: ~(\d+)\)\n\s+steps: (\d+)\n\s+memory holes: (\d+)\n\s+builtins: \((.*?)\)\n\s+syscalls: \(\)',
+        r'\[PASS\] riscairo_tests::rust_tests::test_(\w+)_cpu_(\d+) \(gas: ~(\d+)\)\n\s+steps: (\d+)\n\s+memory holes: (\d+)\n\s+builtins: \((.*?)\)\n\s+syscalls: \(\)',
         re.DOTALL
     )
 
@@ -27,7 +27,7 @@ def parse_test_report(filename):
         })
 
     rust_tests_pattern_local = re.compile(
-        r'\[PASS\] tests::rust_tests::test_(\w+)_local_(\d+) \(gas: ~(\d+)\)\n\s+steps: (\d+)\n\s+memory holes: (\d+)\n\s+builtins: \((.*?)\)\n\s+syscalls: \(\)',
+        r'\[PASS\] riscairo_tests::rust_tests::test_(\w+)_local_(\d+) \(gas: ~(\d+)\)\n\s+steps: (\d+)\n\s+memory holes: (\d+)\n\s+builtins: \((.*?)\)\n\s+syscalls: \(\)',
         re.DOTALL
     )
 

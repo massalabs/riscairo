@@ -36,22 +36,22 @@ For each benchmark, there are two variants:
 Linear fits on the benchmark results:
 ```
 In Rust guest within the Riscairo VM for array_reverse:
-  Intercept (gas used at zero input complexity): 3429.82
-  Slope (gas per unit of input complexity): 22.52
+  Intercept (gas used at zero input complexity): 3429.72
+  Slope (gas per unit of input complexity): 22.51
 In native Cairo for array_reverse:
-  Intercept (gas used at zero input complexity): 0.28
-  Slope (gas per unit of input complexity): 0.29
+  Intercept (gas used at zero input complexity): 1.18
+  Slope (gas per unit of input complexity): 0.28
 
 In Rust guest within the Riscairo VM for fibonacci:
-  Intercept (gas used at zero input complexity): 3520.00
-  Slope (gas per unit of input complexity): 9.90
+  Intercept (gas used at zero input complexity): 3520.50
+  Slope (gas per unit of input complexity): 9.87
 In native Cairo for fibonacci:
   Intercept (gas used at zero input complexity): 0.50
   Slope (gas per unit of input complexity): 0.16
 
 In Rust guest within the Riscairo VM for find_max:
-  Intercept (gas used at zero input complexity): 3449.70
-  Slope (gas per unit of input complexity): 15.97
+  Intercept (gas used at zero input complexity): 3449.98
+  Slope (gas per unit of input complexity): 15.96
 In native Cairo for find_max:
   Intercept (gas used at zero input complexity): 1.00
   Slope (gas per unit of input complexity): 0.20
