@@ -1,4 +1,6 @@
 target
+profile
+snfoundry_trace
 .snfoundry_cache
 .snfoundry_versioned_programs
 riscv_compliance_checks/out/
