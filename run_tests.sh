@@ -10,7 +10,7 @@ cd ..
 echo "Converting elf files..."
 python3 convert.py
 echo "Running cairo tests..."
-RUST_MIN_STACK=5000000 snforge test --detailed-resources | tee test_report.txt
+snforge test --detailed-resources | tee test_report.txt
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
   echo "snforge test failed"
   exit 1
