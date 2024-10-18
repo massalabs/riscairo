@@ -1,8 +1,12 @@
 pub mod riscv;
 pub mod elf;
+pub mod bytes;
+use utils::traits::bytes::{ToBytes, FromBytes};
+
 
 use riscairo::riscv::{RISCVMachineTrait, RISCVMachine, FlowControl};
 use riscairo::elf::ELFLoaderTrait;
+// use riscairo::bytes::{ToBytes, FromBytes};
 
 const ECALL_CATEGORY_PANIC: u32 = 1;
 const ECALL_CATEGORY_RETURN: u32 = 2;
@@ -13,7 +17,7 @@ const IN_FUNCT_NAME_OFFSET: u32 = IN_FUNCT_NAME_LEN_OFFSET + 4;
 const IN_FUNCT_ARGS_LEN_OFFSET: u32 = IN_FUNCT_NAME_OFFSET + 255;
 const IN_FUNCT_ARGS_OFFSET: u32 = IN_FUNCT_ARGS_LEN_OFFSET + 4;
 
-fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_args: @Array<u8>) {
+fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_args: Span<u8>) {
     let input_func_len = input_func.len();
     let input_args_len = input_args.len();
 
@@ -68,7 +72,16 @@ fn write_args_to_ram(ref machine: RISCVMachine, input_func: @ByteArray, input_ar
     };
 }
 
-pub fn riscv_call(bytecode: Span<u8>, func_name: @ByteArray, args: @Array<u8>) -> Array<u8> {
+pub fn riscv_call<A, R, +ToBytes<A>, +FromBytes<R>>(
+    bytecode: Span<u8>, func_name: @ByteArray, args: A
+) -> R {
+    riscv_call_impl(bytecode, func_name, args.to_le_bytes())
+        .span()
+        .from_le_bytes()
+        .unwrap()
+}
+
+fn riscv_call_impl(bytecode: Span<u8>, func_name: @ByteArray, args: Span<u8>) -> Array<u8> {
     // load ELF file
     let mut machine = RISCVMachineTrait::new();
     let mut elf_loader = ELFLoaderTrait::new();

@@ -2,10 +2,47 @@
 version = 1
 
 [[package]]
+name = "alexandria_data_structures"
+version = "0.1.0"
+source = "git+https://github.com/kkrt-labs/kakarot-ssj.git#9203b9c29c5e049d556cafdb3554929f7c719143"
+
+[[package]]
+name = "contracts"
+version = "0.1.0"
+source = "git+https://github.com/kkrt-labs/kakarot-ssj.git#9203b9c29c5e049d556cafdb3554929f7c719143"
+dependencies = [
+ "evm",
+ "openzeppelin",
+ "utils",
+]
+
+[[package]]
+name = "evm"
+version = "0.1.0"
+source = "git+https://github.com/kkrt-labs/kakarot-ssj.git#9203b9c29c5e049d556cafdb3554929f7c719143"
+dependencies = [
+ "contracts",
+ "garaga",
+ "openzeppelin",
+ "utils",
+]
+
+[[package]]
+name = "garaga"
+version = "0.1.0"
+source = "git+https://github.com/keep-starknet-strange/garaga.git#584cad66d067aa6c04447fe06a00c7be99bc2445"
+
+[[package]]
+name = "openzeppelin"
+version = "0.1.0"
+source = "git+https://github.com/kkrt-labs/kakarot-ssj.git#9203b9c29c5e049d556cafdb3554929f7c719143"
+
+[[package]]
 name = "riscairo"
 version = "0.1.0"
 dependencies = [
  "snforge_std",
+ "utils",
 ]
 
 [[package]]
@@ -19,4 +56,13 @@ version = "0.30.0"
 source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.30.0#196f06b251926697c3d66800f2a93ae595e76496"
 dependencies = [
  "snforge_scarb_plugin",
+]
+
+[[package]]
+name = "utils"
+version = "0.1.0"
+source = "git+https://github.com/kkrt-labs/kakarot-ssj.git#9203b9c29c5e049d556cafdb3554929f7c719143"
+dependencies = [
+ "alexandria_data_structures",
+ "evm",
 ]
